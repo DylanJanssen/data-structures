@@ -13,9 +13,11 @@
 #include <string> 
 #include <vector> 
 #include <iostream> 
+#include "map.hpp"
+
 
 template <typename T> 
-class SkipList 
+class SkipList : public Map<T>
 {
 private: 
     struct SkipNode 
@@ -33,9 +35,9 @@ private:
     SkipNode* find(int key, std::vector<SkipNode*> &update); 
 public: 
     SkipList(); 
-    void insert(int key, T value); 
-    bool find(int key, T &value); 
-    bool erase(int key); 
+    void insert(int key, const T &value) override; 
+    bool find(int key, T &value) override; 
+    void erase(int key) override; 
     void display_levels();
     void reconfigure(); 
     int get_highest_level() { return node_level(head->forward); }
@@ -93,7 +95,7 @@ bool SkipList<T>::find(int key, T &value)
 }
 
 template <typename T> 
-void SkipList<T>::insert(int key, T value) 
+void SkipList<T>::insert(int key, const T &value) 
 {
     std::vector<SkipNode*> update(head->forward); 
     auto x = find(key, update);
@@ -122,7 +124,7 @@ void SkipList<T>::insert(int key, T value)
 }
 
 template <typename T> 
-bool SkipList<T>::erase(int key)
+void SkipList<T>::erase(int key)
 {
     std::vector<SkipNode*> update(head->forward); 
     auto x = find(key, update);
@@ -134,9 +136,7 @@ bool SkipList<T>::erase(int key)
         while (head->forward[head->forward.size()-2] == NIL)
             head->forward.pop_back(); 
         sz--;
-        return true; 
     }
-    return false; 
 }
 
 template <typename T> 

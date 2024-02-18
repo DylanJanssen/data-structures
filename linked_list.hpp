@@ -10,9 +10,10 @@
 
 #include <iostream> 
 #include <string> 
+#include "map.hpp"
 
 template <typename T> 
-class LinkedList 
+class LinkedList : public Map<T>
 {
 private: 
     struct Node 
@@ -30,9 +31,9 @@ public:
     LinkedList(LinkedList &&list); 
     ~LinkedList(); 
     int size() const { return sz; }
-    bool find(int key, T &value) const; 
-    void insert(int key, const T &value); 
-    void erase(int key); 
+    bool find(int key, T &value) override; 
+    void insert(int key, const T &value) override; 
+    void erase(int key) override; 
     LinkedList<T> operator+(const LinkedList<T> &rhs); 
     LinkedList<T> operator-(const LinkedList<T> &rhs); 
     template <typename U> 
@@ -86,7 +87,7 @@ LinkedList<T>::~LinkedList()
 }
 
 template <typename T> 
-bool LinkedList<T>::find(int key, T &value) const
+bool LinkedList<T>::find(int key, T &value)
 {
     auto x = head; 
     while (x != nullptr) 

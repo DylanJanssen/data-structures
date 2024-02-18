@@ -19,27 +19,27 @@ struct TreapNode
     T value;
     TreapNode *left, *right;
     int priority;
-    TreapNode(int k, T v, int p) : key(k), value(v), left(nullptr), right(nullptr), priority(p) {}
+    TreapNode(int k, const T &v) : key(k), value(v), left(nullptr), right(nullptr), priority(rand()) {}
 };
 
 
 template <typename T, typename node_T = TreapNode<T>>
 class Treap : public BST<T, node_T>
 {
-private:
-    void insert(node_T *&node, int key, T &value);
+protected:
+    void insert(node_T *&node, int key, const T &value);
     void erase(node_T *&node, int key);
 
 public:
-    void insert(int key, T value) { insert(this->root, key, value); }
-    void erase(int key) { erase(this->root, key); }
+    void insert(int key, const T &value) override { insert(this->root, key, value); }
+    void erase(int key) override { erase(this->root, key); }
 };
 
 template <typename T, typename node_T>
-void Treap<T, node_T>::insert(node_T *&node, int key, T &value)
+void Treap<T, node_T>::insert(node_T *&node, int key, const T &value)
 {
     if (node == nullptr) // make a new node
-        node = new node_T(key, value, rand());
+        node = new node_T(key, value);
     else
     {
         if (node->key == key)
@@ -51,13 +51,13 @@ void Treap<T, node_T>::insert(node_T *&node, int key, T &value)
         {
             insert(node->left, key, value);
             if (node->left->priority > node->priority)
-                BST<T, node_T>::rotate_right(node);
+                this->rotate_right(node);
         }
         else
         {
             insert(node->right, key, value);
             if (node->right->priority > node->priority)
-                BST<T, node_T>::rotate_left(node);
+                this->rotate_left(node);
         }
     }
 }
@@ -88,12 +88,12 @@ void Treap<T, node_T>::erase(node_T *&node, int key)
         {
             if (node->left->priority < node->right->priority)
             {
-                rotate_left(node);
+                this->rotate_left(node);
                 erase(node->left, key);
             }
             else
             {
-                rotate_right(node);
+                this->rotate_right(node);
                 erase(node->right, key);
             }
         }

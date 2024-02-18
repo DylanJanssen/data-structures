@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "map.hpp" 
 
 template <typename T>
 struct Node
@@ -18,17 +19,17 @@ struct Node
     int key;
     T value;
     Node *left, *right;
-    Node(int k, T v) : key(k), value(v), left(nullptr), right(nullptr) {}
+    Node(int k, const T &v) : key(k), value(v), left(nullptr), right(nullptr) {}
 };
 
 template <typename T, typename node_T = Node<T>>
-class BST
+class BST : public Map<T>
 {
 protected:
     node_T *root;
     std::vector<std::string> traversals{"Preorder", "Inorder", "Postorder"};
 
-    void insert(node_T *&node, int key, T &value);
+    void insert(node_T *&node, int key, const T &value);
     void erase(node_T *&node, int key);
     bool find(node_T *node, int key, T &value);
     void rotate_left(node_T *&node);
@@ -40,9 +41,9 @@ protected:
 
 public:
     BST() : root(nullptr) {}
-    void insert(int key, T value) { insert(root, key, value); }
-    void erase(int key) { erase(root, key); }
-    bool find(int key, T &value) { return find(root, key, value); }
+    void insert(int key, const T &value) override { insert(root, key, value); }
+    void erase(int key) override { erase(root, key); }
+    bool find(int key, T &value) override { return find(root, key, value); }
     void traverse(int type); // 0=preorder, 1=inorder, 2=postorder
     void print() { print("", root, false); }
     ~BST();
@@ -66,7 +67,7 @@ void BST<T, node_T>::print(const std::string &prefix, node_T *node, bool is_righ
 }
 
 template <typename T, typename node_T>
-void BST<T, node_T>::insert(node_T *&node, int key, T &value)
+void BST<T, node_T>::insert(node_T *&node, int key, const T &value)
 {
     if (node == nullptr) // make a new node
         node = new node_T(key, value);
@@ -193,7 +194,7 @@ void BST<T, node_T>::deleteTree(node_T *node)
 }
 
 template <typename T, typename node_T>
-BST<T, node_T>::~BST()
+BST<T, node_T>::~BST() 
 {
     deleteTree(root);
     root = nullptr;

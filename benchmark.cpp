@@ -12,10 +12,12 @@
 #include <string> 
 
 // Include data structures 
+#include "map.hpp"
 #include "linked_list.hpp"
 #include "skip_list.hpp"
-#include "binary_search_tree.hpp"
 #include "treap.hpp"
+#include "binary_search_tree.hpp"
+
 
 void benchmark_map(std::map<int, std::string> &s, const std::vector<int> &keys) 
 {
@@ -36,8 +38,8 @@ void benchmark_map(std::map<int, std::string> &s, const std::vector<int> &keys)
     std::cout << "   Search time: " << duration << std::endl; 
 }
 
-template <typename DS>
-void benchmark(DS &ds, const std::vector<int> &keys)
+template <typename T>
+void benchmark(Map<T> &ds, const std::vector<int> &keys)
 {
     std::string value; 
     auto start = clock();
